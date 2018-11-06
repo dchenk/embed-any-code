@@ -19,11 +19,10 @@ add_filter('the_excerpt', 'embed_any_code_display');
 function embed_any_code_meta($post) {
 	wp_nonce_field(plugin_basename( __FILE__ ), 'embed_any_code_nonce');
 	?>
-	<style> #embed_any_code_top, #embed_any_code { width: 100%; height: 80px; } </style>
 	<label for="embed_any_code_top">Code before content</label><br>
-	<textarea id="embed_any_code_top" name="embed_any_code_top"><?php echo get_post_meta($post->ID, '_embed_any_code_top', true); ?></textarea><br>
-	<label for="embed_any_code">Code after content<label><br>
-	<textarea id="embed_any_code" name="embed_any_code"><?php echo get_post_meta($post->ID, '_embed_any_code', true); ?></textarea><?php
+	<textarea id="embed_any_code_top" name="embed_any_code_top" style="width:100%;height:80px;"><?php echo get_post_meta($post->ID, '_embed_any_code_top', true); ?></textarea><br>
+	<label for="embed_any_code">Code after content</label><br>
+	<textarea id="embed_any_code" name="embed_any_code" style="width:100%;height:80px;"><?php echo get_post_meta($post->ID, '_embed_any_code', true); ?></textarea><?php
 }
 
 // Add the box defined above to post and page edit screens.
