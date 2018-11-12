@@ -3,14 +3,18 @@
 Plugin Name: Embed Any Code
 Plugin URI: https://github.com/dchenk/embed-any-code
 Description: This plugin lets you insert code at the beginning and end of the content of any page or post.
-Version: 0.9
+Version: 0.10
 Author: Wider Webs
 */
 
 // Output the code.
 function embed_any_code_display($content = '') {
 	global $post;
-	return get_post_meta($post->ID, '_embed_any_code_top', true) . $content . get_post_meta($post->ID, '_embed_any_code', true);
+	$code = get_post_meta($post->ID, '_embed_any_code', true);
+	if ($code) {
+		return $content . $code;
+	}
+	return $content;
 }
 add_filter('the_content', 'embed_any_code_display');
 add_filter('the_excerpt', 'embed_any_code_display');
@@ -19,8 +23,6 @@ add_filter('the_excerpt', 'embed_any_code_display');
 function embed_any_code_meta($post) {
 	wp_nonce_field(plugin_basename( __FILE__ ), 'embed_any_code_nonce');
 	?>
-	<label for="embed_any_code_top">Code before content</label><br>
-	<textarea id="embed_any_code_top" name="embed_any_code_top" style="width:100%;height:80px;"><?php echo get_post_meta($post->ID, '_embed_any_code_top', true); ?></textarea><br>
 	<label for="embed_any_code">Code after content</label><br>
 	<textarea id="embed_any_code" name="embed_any_code" style="width:100%;height:80px;"><?php echo get_post_meta($post->ID, '_embed_any_code', true); ?></textarea><?php
 }
@@ -55,9 +57,6 @@ function embed_any_code_save($pID) {
 	}
 
 	// We're authenticated. Find and save the data.
-	$text = isset($_POST['embed_any_code_top']) ? $_POST['embed_any_code_top'] : '';
-	update_post_meta($pID, '_embed_any_code_top', $text);
-
 	$text = isset($_POST['embed_any_code']) ? $_POST['embed_any_code'] : '';
 	update_post_meta($pID, '_embed_any_code', $text);
 }
