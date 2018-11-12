@@ -2,7 +2,7 @@
 /*
 Plugin Name: Embed Any Code
 Plugin URI: https://github.com/dchenk/embed-any-code
-Description: This plugin lets you insert code at the beginning and end of the content of any page or post.
+Description: This plugin lets you insert code after the content of any page or post.
 Version: 0.10
 Author: Wider Webs
 */
