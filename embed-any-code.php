@@ -2,8 +2,8 @@
 /*
 Plugin Name: Embed Any Code
 Plugin URI: https://github.com/dchenk/embed-any-code
-Description: This plugin lets you insert code after the content of any page or post.
-Version: 0.10
+Description: Insert code after the content of any page or post.
+Version: 0.11
 Author: Wider Webs
 */
 
@@ -21,10 +21,10 @@ add_filter('the_excerpt', 'embed_any_code_display');
 
 // Display a box with input fields for code to go before and after the content.
 function embed_any_code_meta($post) {
-	wp_nonce_field(plugin_basename( __FILE__ ), 'embed_any_code_nonce');
-	?>
+	wp_nonce_field(plugin_basename(__FILE__), 'embed_any_code_nonce');
+	$postMeta = get_post_meta($post->ID, '_embed_any_code', true); ?>
 	<label for="embed_any_code">Code after content</label><br>
-	<textarea id="embed_any_code" name="embed_any_code" style="width:100%;height:80px;"><?php echo get_post_meta($post->ID, '_embed_any_code', true); ?></textarea><?php
+	<textarea id="embed_any_code" name="embed_any_code" style="width:100%; height:80px;"><?php echo $postMeta; ?></textarea><?php
 }
 
 // Add the box defined above to post and page edit screens.
@@ -43,7 +43,7 @@ function embed_any_code_save($pID) {
 
 	// Verify this came from our screen and with proper authorization, since 'save_post' can be triggered
 	// at other times.
-	if (!wp_verify_nonce($_POST['embed_any_code_nonce'], plugin_basename( __FILE__ ))) {
+	if (!wp_verify_nonce($_POST['embed_any_code_nonce'], plugin_basename(__FILE__))) {
 		return;
 	}
 
@@ -52,12 +52,14 @@ function embed_any_code_save($pID) {
 		if (!current_user_can('edit_page', $pID)) {
 			return;
 		}
-	} else if (!current_user_can('edit_post', $pID)) {
-		return;
+	} else {
+		if (!current_user_can('edit_post', $pID)) {
+			return;
+		}
 	}
 
 	// We're authenticated. Find and save the data.
-	$text = isset($_POST['embed_any_code']) ? $_POST['embed_any_code'] : '';
+	$text = $_POST['embed_any_code'] ?? '';
 	update_post_meta($pID, '_embed_any_code', $text);
 }
 add_action('save_post', 'embed_any_code_save');
