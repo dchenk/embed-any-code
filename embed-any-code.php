@@ -3,7 +3,7 @@
 Plugin Name: Embed Any Code
 Plugin URI: https://github.com/dchenk/embed-any-code
 Description: Insert code after the content of any page or post.
-Version: 0.11
+Version: 0.12
 Author: Wider Webs
 */
 
@@ -43,7 +43,7 @@ function embed_any_code_save($pID) {
 
 	// Verify this came from our screen and with proper authorization, since 'save_post' can be triggered
 	// at other times.
-	if (!wp_verify_nonce($_POST['embed_any_code_nonce'], plugin_basename(__FILE__))) {
+	if (!isset($_POST['embed_any_code_nonce']) || !wp_verify_nonce($_POST['embed_any_code_nonce'], plugin_basename(__FILE__))) {
 		return;
 	}
 
